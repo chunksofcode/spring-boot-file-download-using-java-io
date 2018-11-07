@@ -1,5 +1,7 @@
 package com.filedownloader.proxy_server.controllers;
 
+import javax.servlet.ServletContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,10 +15,14 @@ import com.filedownloader.proxy_server.services.FileDownloadService;
 public class FileDownloadController {
 
 	@Autowired
-	FileDownloadService fileDownloadService; 
-	@RequestMapping(method=RequestMethod.POST ,value ="/filedownload") 
-	public String downloadFile(@RequestBody FileDetails fileDetails){
+	FileDownloadService fileDownloadService;
+
+	@Autowired
+	ServletContext servletContext;
+
+	@RequestMapping(method = RequestMethod.POST, value = "/filedownload")
+	public String downloadFile(@RequestBody FileDetails fileDetails) {
 		return fileDownloadService.downloadFile(fileDetails);
 	}
-	
+
 }

@@ -4,11 +4,14 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.zip.GZIPInputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,10 +25,14 @@ import com.filedownloader.proxy_server.utils.Constants;
 @Service
 public class FileDownloadService {
 	
-  public String downloadFile(FileDetails fileDetails) {
+	public String downloadFile(FileDetails fileDetails) {
 		try {
-			BufferedInputStream bufferedInputStream = new BufferedInputStream(
-					new URL(fileDetails.getFileUrl()).openStream());
+			
+			URL url = new URL(fileDetails.getFileUrl());
+			URLConnection urlCon = url.openConnection();
+			urlCon.addRequestProperty("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36");
+		    InputStream is = urlCon.getInputStream();
+		    BufferedInputStream bufferedInputStream = new BufferedInputStream(is);
 			String downloadedFile = fileDetails.getFileDownloadLocation()+"/"+fileDetails.getFileName()+"."+fileDetails.getFileType();
 			File file = new File(downloadedFile);
 			FileOutputStream fileOutputStream = new FileOutputStream(file);
